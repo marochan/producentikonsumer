@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 
-
-
 public class DefaultMain implements Main {
 	public static Queue<Integer> queue = new LinkedList<Integer>();
 	public static List<Producer> listOfProducers = new ArrayList<Producer>();
@@ -16,46 +14,48 @@ public class DefaultMain implements Main {
 	public static List<Integer> producedList = new ArrayList<Integer>();
 	public static int howMany;
 	public static int sizeLimit;
-	public static int  consumerCount;
+	public static int consumerCount;
 	public static int producerCount;
-	static Object consumerLock =  new Object();
+	static Object consumerLock = new Object();
 	static Object producerLock = new Object();
+
 	public static void main(String[] args) {
-		Scanner sc =  new Scanner(System.in);
-		System.out.println("elements to be added?");
-		howMany = sc.nextInt();
-		System.out.println("Size of the queue");
-		sizeLimit = sc.nextInt();
+		Scanner sc = new Scanner(System.in);
+
+		howMany = 2;
+
+		sizeLimit = 3;
 		DefaultMain dm = new DefaultMain();
-		System.out.println("how many consumers and producers?");
-		consumerCount = sc.nextInt();
-		producerCount = sc.nextInt();
+
+		producerCount = 2;
+		consumerCount = 2;
+
 		dm.produceConsume(howMany, sizeLimit, consumerCount, producerCount);
 	}
 
 	@Override
 	public void produceConsume(int howMany, int sizeLimit, int consumerCount, int producerCount) {
-	
-		for(int i = 0 ; i < producerCount; i++) {
-			for(int j = 0; j < consumerCount; j++) {
-				
-				DefaultProducer pro = new DefaultProducer();
-				DefaultConsumer con = new DefaultConsumer();
-				Thread t = new Thread(pro);
-				Thread t1 = new Thread(con);
-				try {
+
+		for (int i = 0, j = 0; i < producerCount && j < consumerCount; i++, j++) {
+
+			DefaultProducer pro = new DefaultProducer();
+			DefaultConsumer con = new DefaultConsumer();
+			Thread t = new Thread(pro);
+			Thread t1 = new Thread(con);
+			try {
 				t.start();
-				t.join();
 				t1.start();
+				t.join();
 				t1.join();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
 				listOfConsumers.add(con);
 				listOfProducers.add(pro);
+				
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
+
 		}
-		System.out.println(queue);
+
 		System.out.println(listOfConsumers.size());
 		System.out.println(listOfProducers.size());
 	}

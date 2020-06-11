@@ -13,30 +13,35 @@ public class DefaultProducer implements Producer {
 		Queue<Integer> q = getQueue();
 		Object p = getProducerLock();
 		Object c = getConsumerLock();
-		synchronized(p) {
-			
-		
-			try {
-			while(q.size()==capacity)
-				p.wait();
-			
-			for(int i = 0; i < addedAmount; i ++) {
-				produced.add(i);
-				q.add(produced.get(produced.size()-1));
-				System.out.println(q);
-				
-			}		
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		}
-		synchronized(c) {
-			c.notify();
-		}
-	}
-	
 
-	
+		synchronized (p) {
+
+			try {
+				while (q.size() >= capacity)
+					p.wait();
+
+				for (int i = 0; i < addedAmount; i++) {
+					if(q.size()==capacity) {
+						System.out.println("Produced enough, now waiting for consumer");
+						break;
+					}
+					System.out.println("Producing...");
+					produced.add(q.size() + 1);
+					q.add(produced.get(produced.size() - 1));
+					System.out.println(q);
+				
+				}
+
+			
+			synchronized (c) {
+				c.notify();
+			}
+			} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+		}
+
+	}
 
 	@Override
 	public List<Integer> getProducedList() {

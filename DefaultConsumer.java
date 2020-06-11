@@ -1,10 +1,7 @@
 package pl.edu.agh.automatedgrader.jtp2.lab2.interfaces;
 
-
 import java.util.List;
 import java.util.Queue;
-
-
 
 public class DefaultConsumer implements Consumer {
 
@@ -15,21 +12,32 @@ public class DefaultConsumer implements Consumer {
 		Queue<Integer> q = getQueue();
 		Object p = getProducerLock();
 		Object c = getConsumerLock();
-		synchronized(c) {
+		synchronized (c) {
 			try {
-				while(q.size() == 0)
+
+				while (q.size() == 0) {
+
 					c.wait();
-				for(int i = 0; i < addedAmount; i++) {
+
+				}
+
+				for (int i = 0; i < addedAmount; i++) {
+					System.out.println("Consuming...");
 					int value = q.remove();
 					consumed.add(value);
 					System.out.println(q);
+					if (q.size() == 0) {
+						System.out.println("Consumed! Now, let the producer do some work");
+						break;
+					}
 				}
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-		synchronized(p) {
-			p.notify();
+
+				synchronized (p) {
+					p.notify();
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
