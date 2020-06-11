@@ -22,6 +22,7 @@ public class DefaultConsumer implements Consumer {
 				for(int i = 0; i < addedAmount; i++) {
 					int value = q.remove();
 					consumed.add(value);
+					System.out.println(q);
 				}
 		} catch (InterruptedException e) {
 			e.printStackTrace();

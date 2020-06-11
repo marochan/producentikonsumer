@@ -23,6 +23,8 @@ public class DefaultProducer implements Producer {
 			for(int i = 0; i < addedAmount; i ++) {
 				produced.add(i);
 				q.add(produced.get(produced.size()-1));
+				System.out.println(q);
+				
 			}		
 		} catch (InterruptedException e) {
 			e.printStackTrace();

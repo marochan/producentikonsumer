@@ -35,14 +35,12 @@ public class DefaultMain implements Main {
 
 	@Override
 	public void produceConsume(int howMany, int sizeLimit, int consumerCount, int producerCount) {
-		for(int i = 0; i < consumerCount; i++) {
-			listOfConsumers.add(new DefaultConsumer());
-		}
-		for(int j = 0; j < producerCount; j++) {
-			listOfProducers.add(new DefaultProducer());
-		}
-		for(Consumer con : listOfConsumers) {
-			for(Producer pro : listOfProducers) {
+	
+		for(int i = 0 ; i < producerCount; i++) {
+			for(int j = 0; j < consumerCount; j++) {
+				
+				DefaultProducer pro = new DefaultProducer();
+				DefaultConsumer con = new DefaultConsumer();
 				Thread t = new Thread(pro);
 				Thread t1 = new Thread(con);
 				try {
@@ -53,9 +51,13 @@ public class DefaultMain implements Main {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+				listOfConsumers.add(con);
+				listOfProducers.add(pro);
 			}
 		}
 		System.out.println(queue);
+		System.out.println(listOfConsumers.size());
+		System.out.println(listOfProducers.size());
 	}
 
 	@Override
